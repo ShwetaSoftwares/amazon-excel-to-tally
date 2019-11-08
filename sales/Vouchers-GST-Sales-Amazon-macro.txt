@@ -1,0 +1,76 @@
+'====================================
+'Procedure NewColumns
+'====================================
+Sub NewColumns(pnFromRow,pnToRow,pstrXMLFilePath,pstrExtras,pKey1)
+
+  'Application.visible = True
+
+  'Stop Recalculation
+  Dim xlCalc As XlCalculation
+  xlCalc = Application.Calculation
+  Application.Calculation = xlCalculationManual
+  On Error GoTo CalcBack
+
+
+  'Variables    
+  '---------
+  Dim nRows As Integer
+  Dim strDrColumn As String
+  Dim strCrColumn As String
+
+  'Initialize value of nRows
+  if pnFromRow>1 Then
+    nRows = pnFromRow
+  Else
+    nRows = 2
+    pnFromRow = nRows
+  End If  
+
+  'Keys
+  pKey1 = Left(pKey1,Len(pKey1)-1)    'Column with Invoice No
+  pKey2 = "A"    '1st Column in data range 
+  pKey3 = "CZ"   'last Column in data range
+  pKey4 = "D"    'Voucher-Type like Shipment, MFNshipment, Cancel, Refund
+
+  Do While True
+
+    if pnToRow > 1 Then 
+      if nRows > pnToRow Then
+        nRows = pnToRow 
+        Exit Do
+      End If
+    End IF
+    if IsEmpty(Range(pKey1 & CStr(nRows)).Value) then Exit Do
+
+    strRange = pKey3 & CStr(nRows)
+    Range(strRange).Value =  (Range(pKey1 & CStr(nRows)).Value  & "-" & Range(pKey4 & CStr(nRows)).Value)
+    'Range(strRange).Value =  CStr(nRows)
+
+    'Next Row
+    nRows = nRows + 1
+  Loop
+
+  'Column to SORT on
+  strKey1 = pKey1 & CStr(pnFromRow)
+  strKey2 = pKey4 & CStr(pnFromRow)
+
+  'Sort Data RANGE FROM COLUMN TO COLUMN 
+  strRange = pKey2 & CStr(pnFromRow) & ":" & pKey3 & CStr(nRows)
+  'MsgBox strRange
+
+  Range(strRange).Select
+  Selection.Sort Key1:=Range(strKey1), Order1:=xlAscending, _
+  key2:= Range(strKey2), order2:=xlAscending, _
+  Header:=xlGuess, _
+  OrderCustom:=1, MatchCase:=False, Orientation:=xlTopToBottom, _
+  DataOption1:=xlSortNormal 
+
+  'Recalculate
+  Application.Calculation = xlCalculationAutomatic
+  Exit Sub
+
+  CalcBack:
+  Application.Calculation = xlCalculationAutomatic
+  MsgBox "Error # " & Err & " : " & Error(Err)  
+
+End Sub
