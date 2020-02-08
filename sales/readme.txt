@@ -28,3 +28,13 @@ This is the STANDARD Excel template with which the Amazon file viz Vouchers-GST-
 
 2. Vouchers-V10-Sales-Purchase-With-Stockitems-Advanced-xml-tags.xml
 This is the supporting file for the STANDARD template.
+
+IMPORTANT NOTEs
+===============
+1. The Party ledger name is fixed as "Amazon India" with following details :
+a. State : Karnataka
+b. GSTIN : 29AAICA3918J1ZE
+
+2. If you want to have a different Party Ledger name in Tally say "Amazon India Pvt Ltd", then add simply as Alias to it as "Amazon India".
+
+3. You must manually modify the Party Ledger "Amazon India" and set the "Is E-Commerce operator" to YES under the GST features. If you do NOT do this, all the entries will be shown as B2B (as Tally will treat the GSTIN of Amazon India as the GSTIN)
